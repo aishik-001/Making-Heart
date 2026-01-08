@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slow Heart Animation</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const cx = canvas.width / 2;
+const cy = canvas.height / 2;
+
+function hearta(k) {
+  return 15 * Math.pow(Math.sin(k), 3);
+}
+
+function heartb(k) {
+  return 12 * Math.cos(k)
+       - 5 * Math.cos(2 * k)
+       - 2 * Math.cos(3 * k)
+       - Math.cos(4 * k);
+}
+
+let i = 0;
+let prev = null;
+const max = 6000;
+
+// ⬇️ SPEED CONTROL: increase this to slow more
+const delay = 30; // milliseconds
+
+function reset() {
+  i = 0;
+  prev = null;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function animate() {
+  if (i >= max) {
+    setTimeout(reset, 800);
+    return;
+  }
+
+  let k = i;
+
+  let x = hearta(k) * 20 + cx;
+  let y = -heartb(k) * 20 + cy;
+
+  ctx.strokeStyle = "red";
+  ctx.fillStyle = "red";
+  ctx.lineWidth = 1;
+
+  if (prev) {
+    ctx.beginPath();
+    ctx.moveTo(prev.x, prev.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+
+  // Dot
+  ctx.beginPath();
+  ctx.arc(x, y, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  prev = { x, y };
+  i++;
+
+  setTimeout(() => {
+    requestAnimationFrame(animate);
+  }, delay); // ⬅️ ONLY SPEED CHANGE
+}
+
+animate();
+</script>
+
+</body>
+</html>
+S
+
+
